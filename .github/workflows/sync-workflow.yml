@@ -26,7 +26,7 @@ jobs:
           TARGET_REPOS=()
           for REPO in $ALL_REPOS; do
             echo "Checking repository: $REPO"
-            FILE_EXISTS=$(gh api repos/synmra/$REPO/contents/.github/workflows/pr-workflow.yml --silent -f ref=main 2>/dev/null || echo "not found")
+            FILE_EXISTS=$(gh api repos/synmra/$REPO/contents/.github/workflows/pr-workflow.yml?ref=main 2>/dev/null || echo "not found")
             echo $FILE_EXISTS
             if [[ "$FILE_EXISTS" != "not found" ]]; then
                 echo "HoHo"
