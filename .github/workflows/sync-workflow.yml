@@ -28,9 +28,9 @@ jobs:
             echo "Checking repository: $REPO"
             FILE_EXISTS=$(gh api repos/synmra/$REPO/contents/.github/workflows/pr-workflow.yml?ref=main 2>/dev/null || echo '{"message": "Not Found"}')
             if echo "$FILE_EXISTS" | jq -e '.message == "Not Found"' >/dev/null; then
-              echo "No pr-workflow.yml found in $REPO. Skipping..."
+              echo -e "\033[31m❌ No pr-workflow.yml found in $REPO. Skipping ..."
             else
-              echo "Found pr-workflow.yml in $REPO. Processing..."
+              echo -e "\033[32m✅ Found pr-workflow.yml in $REPO. Adding to process ..."
               TARGET_REPOS+=("$REPO")
             fi
             
