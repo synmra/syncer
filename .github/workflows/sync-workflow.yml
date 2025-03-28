@@ -6,6 +6,9 @@ on:
       - '.github/workflows/**'
       - 'workflows/**'
 
+permissions:
+  contents: write
+  
 jobs:
   update-workflows:
     runs-on: ubuntu-latest
