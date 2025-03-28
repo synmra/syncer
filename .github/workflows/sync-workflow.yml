@@ -63,6 +63,10 @@ jobs:
             
             git checkout $BRANCH_NAME
 
+            # Configure Git identity for commits
+            git config --local user.name "GitHub Actions"
+            git config --local user.email "github-actions@github.com"
+              
             # Replace pr-workflow.yml (you can modify the file contents or simply replace it with a new one)
             cp "$GITHUB_WORKSPACE/workflows/pr-workflow.yml" ".github/workflows/pr-workflow.yml"
 
