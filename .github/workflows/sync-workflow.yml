@@ -40,7 +40,7 @@ jobs:
               else
                 echo -e "----> \033[32m✅ [$BRANCH] Found pr-workflow.yml in $REPO. Adding to process ..."
                 # Store the repository and branch (ref) for later use
-                TARGET_REPOS+=("$REPO:$BRANCH")
+                TARGET_REPOS+=("${{ env.ORGANIZATION }}/$REPO:$BRANCH")
               fi
             done
           done
@@ -57,6 +57,7 @@ jobs:
             echo -e "\033[36mℹ️ Updating pr-workflow.yml in $REPO_NAME on branch $BRANCH_NAME"
             
             # Checkout the repository and switch to the desired branch
+            
             gh repo clone $REPO_NAME
             cd $REPO_NAME
             
