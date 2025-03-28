@@ -21,14 +21,18 @@ jobs:
           gh auth setup-git
 
           # Fetch the list of repositories
-          TARGET_REPOS=$(gh repo list synmra --json name --jq '.[].name')
-
-          echo "$TARGET_REPOS"
-
-          for REPO in $TARGET_REPOS; do
+          ALL_REPOS=$(gh repo list synmra --json name --jq '.[].name')
+          
+          TARGET_REPOS=()
+          for REPO in $ALL_REPOS; do
             echo "Checking repository: $REPO"
             FILE_EXISTS=$(gh api repos/synmra/$REPO/contents/.github/workflows/pr-workflow.yml --silent -f ref=main 2>/dev/null || echo "not found")
-            echo "Existance: $FILE_EXISTS"
+
+            if [[ "$FILE_EXISTS" != "not found" ]]; then
+                TARGET_REPOS+=("$REPO")
+            fi
           done
           
+          echo "${TARGET_REPOS[@]}"
+
         
