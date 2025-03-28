@@ -23,5 +23,5 @@ jobs:
           # Fetch the list of repositories
           TARGET_REPOS=$(gh repo list synmra --json name --jq '.[].name')
 
-          echo "TARGET_REPOS=$TARGET_REPOS" >> $GITHUB_ENV
+          echo "$TARGET_REPOS"
         
