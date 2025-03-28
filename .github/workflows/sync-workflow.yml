@@ -15,7 +15,7 @@ jobs:
   update-workflows:
     runs-on: ubuntu-latest
     env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.MY_PAT }}
       ORGANIZATION: "synmra"
       BRANCHES: "main master integration test"  # Define the list of branches to check
     steps:
