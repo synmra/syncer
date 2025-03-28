@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ORGANIZATION: "synmra"
+      BRANCHES: "main master integration test"  # Define the list of branches to check
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,19 +23,29 @@ jobs:
           gh auth setup-git
 
           # Fetch the list of repositories
-          ALL_REPOS=$(gh repo list synmra --json name --jq '.[].name')
+          ALL_REPOS=$(gh repo list ${{ env.ORGANIZATION }} --json name --jq '.[].name')
           
           TARGET_REPOS=()
           for REPO in $ALL_REPOS; do
-            echo "Checking repository: $REPO"
-            FILE_EXISTS=$(gh api repos/synmra/$REPO/contents/.github/workflows/pr-workflow.yml?ref=main 2>/dev/null || echo '{"message": "Not Found"}')
-            if echo "$FILE_EXISTS" | jq -e '.message == "Not Found"' >/dev/null; then
-              echo -e "\033[31m❌ No pr-workflow.yml found in $REPO. Skipping ..."
-            else
-              echo -e "\033[32m✅ Found pr-workflow.yml in $REPO. Adding to process ..."
-              TARGET_REPOS+=("$REPO")
-            fi
+            echo -e "\033[36mℹ️ Checking repository: $REPO"
             
+            # Loop through each branch defined in the BRANCHES variable
+            for BRANCH in ${{ env.BRANCHES }}; do
+              echo -e "----> \033[36mℹ️ Checking branch: $BRANCH in repository: $REPO"
+              
+              # Check if pr-workflow.yml exists in the branch
+              FILE_EXISTS=$(gh api repos/${{ env.ORGANIZATION }}/$REPO/contents/.github/workflows/pr-workflow.yml?ref=$BRANCH 2>/dev/null || echo '{"message": "Not Found"}')
+
+              # Check if the file exists by looking for the "Not Found" message in the response
+              if echo "$FILE_EXISTS" | jq -e '.message == "Not Found"' >/dev/null; then
+                echo -e "----> \033[31m❌ No pr-workflow.yml found in $REPO. Skipping ..."
+              else
+                echo -e "----> \033[32m✅ Found pr-workflow.yml in $REPO. Adding to process ..."
+                # Store the repository and branch (ref) for later use
+                TARGET_REPOS+=("$REPO:$BRANCH")
+              fi
+            done
+                        
           done
           
           echo "${TARGET_REPOS[@]}"
