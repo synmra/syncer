@@ -9,17 +9,19 @@ on:
 jobs:
   update-workflows:
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Authenticate GitHub CLI
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-
       - name: Fetch dynamic list of repositories
         run: |
+          # Authenticate with the GitHub CLI using the GH_TOKEN
+          gh auth setup-git
+
+          # Fetch the list of repositories
           TARGET_REPOS=$(gh repo list VisivoConsulting --json name --jq '.[].name')
 
           echo "TARGET_REPOS=$TARGET_REPOS" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
