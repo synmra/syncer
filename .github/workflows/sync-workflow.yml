@@ -64,7 +64,7 @@ jobs:
             git checkout $BRANCH_NAME
 
             # Replace pr-workflow.yml (you can modify the file contents or simply replace it with a new one)
-            cp ../../workflows/pr-workflow.yml .github/workflows/pr-workflow.yml
+            cp "$GITHUB_WORKSPACE/workflows/pr-workflow.yml" ".github/workflows/pr-workflow.yml"
 
             # Commit and push the changes
             git add .github/workflows/pr-workflow.yml
