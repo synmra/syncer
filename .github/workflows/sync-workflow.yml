@@ -26,12 +26,15 @@ jobs:
           TARGET_REPOS=()
           for REPO in $ALL_REPOS; do
             echo "Checking repository: $REPO"
-            FILE_EXISTS=$(gh api repos/synmra/$REPO/contents/.github/workflows/pr-workflow.yml?ref=main 2>/dev/null || echo "not found")
+            FILE_EXISTS=$(gh api repos/synmra/$REPO/contents/.github/workflows/pr-workflow.yml?ref=main 2>/dev/null || echo '{"message": "Not Found"}')
             echo $FILE_EXISTS
-            if [[ "$FILE_EXISTS" != "not found" ]]; then
-                echo "HoHo"
-                TARGET_REPOS+=("$REPO")
+            if echo "$FILE_EXISTS" | jq -e '.message == "Not Found"' >/dev/null; then
+              echo "No pr-workflow.yml found in $REPO. Skipping..."
+            else
+              echo "Found pr-workflow.yml in $REPO. Processing..."
+              TARGET_REPOS+=("$REPO")
             fi
+            
           done
           
           echo "${TARGET_REPOS[@]}"
