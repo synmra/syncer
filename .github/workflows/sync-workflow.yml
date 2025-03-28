@@ -50,7 +50,7 @@ jobs:
       - name: Replace pr-workflow.yml, commit, and push changes
         run: |
           # Loop through each repository and branch in the TARGET_REPOS array
-          for REPO_BRANCH in "${{ env.TARGET_REPOS[@] }}"; do
+          for REPO_BRANCH in ${{ env.target_repos }}; do
             REPO_NAME=$(echo "$REPO_BRANCH" | cut -d':' -f1)
             BRANCH_NAME=$(echo "$REPO_BRANCH" | cut -d':' -f2)
             
