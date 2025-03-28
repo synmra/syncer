@@ -75,7 +75,6 @@ jobs:
             # Replace pr-workflow.yml (you can modify the file contents or simply replace it with a new one)
             cp "$GITHUB_WORKSPACE/workflows/pr-workflow.yml" ".github/workflows/pr-workflow.yml"
 
-            # Commit and push the changes
             git add .github/workflows/pr-workflow.yml
             git commit -m "🔄 Update pr-workflow.yml for branch $BRANCH_NAME"
             git remote set-url origin https://x-access-token:${{ secrets.MY_PAT }}@github.com/${{ env.ORGANIZATION }}/$REPO_NAME.git
