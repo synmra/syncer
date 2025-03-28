@@ -9,6 +9,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write  # To allow actions to execute tasks
   
 jobs:
   update-workflows:
