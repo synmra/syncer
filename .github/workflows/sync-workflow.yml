@@ -17,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Fetch dynamic list of repositories
+      - name: Fetch dynamic list of repositories and find the targets
         run: |
           # Authenticate with the GitHub CLI using the GH_TOKEN
           gh auth setup-git
@@ -43,9 +43,34 @@ jobs:
                 TARGET_REPOS+=("$REPO:$BRANCH")
               fi
             done
-                        
           done
-          
-          echo "${TARGET_REPOS[@]}"
+          echo "target_repos=${TARGET_REPOS[@]}" >> $GITHUB_ENV
 
+
+      - name: Replace pr-workflow.yml, commit, and push changes
+        run: |
+          # Loop through each repository and branch in the TARGET_REPOS array
+          for REPO_BRANCH in "${{ env.TARGET_REPOS[@] }}"; do
+            REPO_NAME=$(echo "$REPO_BRANCH" | cut -d':' -f1)
+            BRANCH_NAME=$(echo "$REPO_BRANCH" | cut -d':' -f2)
+            
+            echo -e "\033[36mℹ️ Updating pr-workflow.yml in $REPO_NAME on branch $BRANCH_NAME"
+            
+            # Checkout the repository and switch to the desired branch
+            gh repo clone $REPO_NAME
+            cd $REPO_NAME
+            git checkout $BRANCH_NAME
+
+            # Replace pr-workflow.yml (you can modify the file contents or simply replace it with a new one)
+            cp ../../workflows/pr-workflow.yml .github/workflows/pr-workflow.yml
+
+            # Commit and push the changes
+            git add .github/workflows/pr-workflow.yml
+            git commit -m "🔄 Update pr-workflow.yml for branch $BRANCH_NAME"
+            git push origin $BRANCH_NAME
+
+            # Go back to the original directory and clean up
+            cd ..
+            rm -rf $REPO_NAME
+          done
         
