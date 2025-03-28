@@ -30,17 +30,15 @@ jobs:
             echo -e "\033[36mℹ️ Checking repository: $REPO"
             
             # Loop through each branch defined in the BRANCHES variable
-            for BRANCH in ${{ env.BRANCHES }}; do
-              echo -e "----> \033[36mℹ️ Checking branch: $BRANCH in repository: $REPO"
-              
+            for BRANCH in ${{ env.BRANCHES }}; do             
               # Check if pr-workflow.yml exists in the branch
               FILE_EXISTS=$(gh api repos/${{ env.ORGANIZATION }}/$REPO/contents/.github/workflows/pr-workflow.yml?ref=$BRANCH 2>/dev/null || echo '{"message": "Not Found"}')
 
               # Check if the file exists by looking for the "Not Found" message in the response
               if echo "$FILE_EXISTS" | jq -e '.message == "Not Found"' >/dev/null; then
-                echo -e "----> \033[31m❌ No pr-workflow.yml found in $REPO. Skipping ..."
+                echo -e "----> [$BRANCH] \033[31m❌ No pr-workflow.yml found in $REPO. Skipping ..."
               else
-                echo -e "----> \033[32m✅ Found pr-workflow.yml in $REPO. Adding to process ..."
+                echo -e "----> $BRANCH\033[32m✅ Found pr-workflow.yml in $REPO. Adding to process ..."
                 # Store the repository and branch (ref) for later use
                 TARGET_REPOS+=("$REPO:$BRANCH")
               fi
