@@ -14,14 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Authenticate GitHub CLI
+        run: gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
+
       - name: Fetch dynamic list of repositories
         run: |
-          # Authenticate with the GitHub CLI using the GH_TOKEN
-          gh auth setup-git
-
           # Fetch the list of repositories
           TARGET_REPOS=$(gh repo list synmra --json name --jq '.[].name')
-
           echo "TARGET_REPOS=$TARGET_REPOS" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
