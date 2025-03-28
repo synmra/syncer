@@ -24,4 +24,11 @@ jobs:
           TARGET_REPOS=$(gh repo list synmra --json name --jq '.[].name')
 
           echo "$TARGET_REPOS"
+
+          for REPO in $REPOS; do
+            echo "Checking repository: $REPO"
+            FILE_EXISTS=$(gh api repos/synmra/$REPO/contents/.github/workflows/pr-workflow.yml --silent -f ref=main 2>/dev/null || echo "not found")
+            echo "Existance: $FILE_EXISTS"
+          done
+          
         
