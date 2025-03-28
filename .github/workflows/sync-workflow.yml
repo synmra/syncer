@@ -20,7 +20,7 @@ jobs:
           gh auth setup-git
 
           # Fetch the list of repositories
-          TARGET_REPOS=$(gh repo list VisivoConsulting --json name --jq '.[].name')
+          TARGET_REPOS=$(gh repo list synmra --json name --jq '.[].name')
 
           echo "TARGET_REPOS=$TARGET_REPOS" >> $GITHUB_ENV
         env:
