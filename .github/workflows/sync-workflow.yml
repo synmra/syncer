@@ -78,6 +78,8 @@ jobs:
             # Commit and push the changes
             git add .github/workflows/pr-workflow.yml
             git commit -m "🔄 Update pr-workflow.yml for branch $BRANCH_NAME"
+            git remote set-url origin https://x-access-token:${{ secrets.MY_PAT }}@github.com/${{ env.ORGANIZATION }}/$REPO_NAME.git
+
             git push origin $BRANCH_NAME
 
             # Go back to the original directory and clean up
