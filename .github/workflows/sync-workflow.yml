@@ -59,7 +59,7 @@ jobs:
             # Checkout the repository and switch to the desired branch
             gh repo clone $REPO_NAME
             cd $REPO_NAME
-            pwd
+            
             git checkout $BRANCH_NAME
 
             # Replace pr-workflow.yml (you can modify the file contents or simply replace it with a new one)
